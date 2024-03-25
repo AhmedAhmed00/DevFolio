@@ -1,12 +1,19 @@
 const arrowTop = document.querySelector(".arrow-up");
 const allSections = Array.from(document.getElementsByTagName("section"));
 const allLinks = Array.from(document.querySelectorAll(".nav-link"));
+let allSlides = Array.from(document.querySelectorAll(".portfolio-card img "));
+let lightboxContainer = document.querySelector(".lightbox");
+let lightboxItem = document.querySelector(".lightbox-item");
+let navbar = document.querySelector(".navbar")
+let exit = document.querySelector(".exit");
+let prev = document.querySelector(".left");
+let next = document.querySelector(".right");
 const bars = document.querySelectorAll(".progress-bar");
 const navBar = document.querySelector(".navbar");
 const logo = document.querySelector(".logo");
 const burgerIcon = document.querySelector(".burger-icon");
 let currentSec = "";
-
+console.log(allSlides);
 arrowTop.addEventListener("click", scrollToTop);
 window.addEventListener("scroll", () => {
   activeLink();
@@ -15,6 +22,73 @@ window.addEventListener("scroll", () => {
   increaseprogressBar();
 });
 window.onload = typingEffect;
+
+
+
+
+let currentIndex = 0;
+
+for (let i = 0; i < allSlides.length; i++) {
+  allSlides[i].addEventListener("click", (event) => {
+    console.log(event.target);
+    displaySlide(event);
+
+  });
+}
+
+
+function displaySlide(event) {
+  currentIndex = allSlides.indexOf(event.target);
+  let currentSrc = event.target.src;
+  lightboxItem.style.backgroundImage = `url(${currentSrc})`;
+  lightboxContainer.classList.replace("d-none", "d-flex")
+}
+
+
+
+
+function closeSlider() {
+
+  lightboxContainer.classList.replace("d-flex", "d-none");
+}
+next.onclick = nextSlide;
+prev.onclick = prevSlide;
+exit.onclick = closeSlider
+
+function nextSlide() {
+  if (currentIndex == allSlides.length - 1) {
+    return false;
+  } else {
+    currentIndex++;
+    let currentSrc = allSlides[currentIndex].src;
+    lightboxItem.style.backgroundImage = `url(${currentSrc})`;
+  }
+}
+
+function prevSlide() {
+  if (currentIndex == 0) {
+    return false;
+  } else {
+    currentIndex--;
+    let currentSrc = allSlides[currentIndex].src;
+    lightboxItem.style.backgroundImage = `url(${currentSrc})`;
+  }
+}
+
+document.addEventListener("keydown", (e) => {
+  switch (e.key) {
+    case "ArrowRight":
+      nextSlide();
+      break;
+    case "ArrowLeft":
+      prevSlide();
+      break;
+    case "Escape":
+      closeSlider();
+  }
+});
+
+
 
 function changeNavbarColor() {
   if (document.documentElement.scrollTop >= allSections[1].offsetTop) {
